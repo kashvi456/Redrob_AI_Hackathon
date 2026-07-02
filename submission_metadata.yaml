@@ -1,0 +1,92 @@
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "J.Kashvi"  
+
+primary_contact:
+  name: "J. Kashvi"
+  email: "jkashvi22@gmail.com"   
+  phone: "+91-9087220504"       
+
+team_members:
+  - name: "J. Kashvi"
+    email: "jkashvi22@gmail.com"
+    role: "AI Engineer"         
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/kashvi456/Redrob_AI_Hackathon.git"
+
+Sandbox_environment: "Streamlit"
+sandbox_link: "https://redrobaihackathon-pde94wnbzemeuslzdxlbbc.streamlit.app/"
+
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+
+# The single command that produces submission.csv from candidates.jsonl.
+# Should run end-to-end within 5 minutes on CPU with 16GB RAM and no network.
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Windows"                    
+  cpu_cores: 8                                  
+  ram_gb: 16                                    
+  python_version: "3.12.10"                     
+  os: "Windows 11"                              
+  uses_gpu_for_inference: false                
+  has_network_during_ranking: false             
+  pre_computation_required: false               
+  pre_computation_time_minutes: less than 2 minutes            
+
+# ============================================================================
+# AI tools declaration
+# ============================================================================
+
+ai_tools_used:
+  - "Claude - for architecture discussion and code review"       
+  - "Gemini Pro - for documentation" 
+
+ai_usage_summary: |
+  Briefly describe how AI tools were used. Examples:
+  - "Used Claude for code review and architectural discussion.
+  - "Used Gemini Pro for documentation"
+  - "No candidate data was fed to any LLM."
+
+
+# ============================================================================
+# Approach summary 
+# ============================================================================
+methodology_summary: |
+  Rule-based, fully explainable ranker (no embeddings/LLM calls). A honeypot
+  screen first removes candidates with internally inconsistent profiles
+  (e.g. summary text years-of-experience contradicting the structured field,
+  career-history duration mismatched against stated experience, overlapping
+  full-time roles, "expert" skills with zero duration). Remaining candidates
+  get a weighted base-fit score across 7 components: title relevance (0.28,
+  the primary defense against the keyword-stuffer trap), production evidence
+  mined from career-history prose for embeddings/vector-DB/ranking/retrieval/
+  eval-framework work (0.27), trust-weighted skills that only count if
+  endorsed, used, or corroborated in prose (0.15), experience-years fit as a
+  smooth Gaussian centered on 7 years (0.10), location fit favoring Pune/
+  Noida per the JD (0.10), education tier (0.05), and tenure stability
+  (0.05). JD-specific disqualifiers (pure research background, consulting-
+  only career, CV/speech/robotics without NLP/IR, LangChain-only recent AI
+  experience, stale senior ICs, title-chasing) apply as multiplicative
+  penalties, not hard cuts. A bounded behavioral-signal multiplier
+  (open_to_work, activity recency, response rate, notice period, etc.) is
+  applied last. All saturating sub-scores use smooth asymptotic curves
+  instead of hard caps to preserve score resolution across the top 100.
+  Reasoning strings are generated from the same extracted facts used for
+  scoring, never templated. Runtime: ~40s / <200MB RAM on the full 100K pool.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true        # I have read submission_spec.md in full
+  code_is_original_work: true       # My code is my original work (using AI as a tool is fine)
+  no_collusion: true                # I have not coordinated my submission with other teams
+  reproduction_tested: true         # I have tested that my reproduce_command runs end-to-end
